@@ -1,7 +1,7 @@
 <?php
 
-use Ardi\ConfigReader;
 
+use Ardi\ConfigReader;
 
 class ConfigReaderTest extends PHPUnit_Framework_TestCase {
     /**
@@ -9,7 +9,7 @@ class ConfigReaderTest extends PHPUnit_Framework_TestCase {
      */
     public static function setUpFixtures()
     {
-        ConfigReader::setConfigDir('tests/fixtures');
+        ConfigReader::setConfigDir('tests/fixtures/config');
     }
 
     public function testDependencyInjection()
