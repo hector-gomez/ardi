@@ -43,10 +43,15 @@ class Translator
      */
     public function get($key)
     {
+        $exception = new \Exception("Could not find a translation for $key");
         try {
-            return array_key_exists($key, $this->viewStrings) ? $this->viewStrings[$key] : $this->commonStrings[$key];
+            $result = array_key_exists($key, $this->viewStrings) ? $this->viewStrings[$key] : $this->commonStrings[$key];
         } catch(\Exception $e) {
-            throw new \Exception("Could not find a translation for $key");
+            throw $exception;
         }
+        if (empty($result)) {
+            throw $exception;
+        }
+        return $result;
     }
 }

@@ -3,7 +3,8 @@
 
 use Ardi\Translator;
 
-class TranslatorTest extends PHPUnit_Framework_TestCase {
+class TranslatorTest extends PHPUnit_Framework_TestCase
+{
     private $langDir = 'tests/fixtures/lang';
 
     public function testGetCommonString()
@@ -36,5 +37,12 @@ class TranslatorTest extends PHPUnit_Framework_TestCase {
         $this->setExpectedException('Exception', 'Could not find a translation for random_string');
         $i18n = new Translator('en', 'test_view', $this->langDir);
         $i18n->get('random_string');
+    }
+
+    public function testEmptyString()
+    {
+        $this->setExpectedException('Exception', 'Could not find a translation for empty');
+        $i18n = new Translator('en', 'test_view', $this->langDir);
+        $i18n->get('empty');
     }
 }
