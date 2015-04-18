@@ -70,3 +70,6 @@ Using the PHPunit installation downloaded with Composer and your default PHP int
 ```
 vendor/phpunit/phpunit/phpunit --coverage-html tmp/test-report --configuration phpunit.xml tests/
 ```
+
+The oldest supported PHP version is 5.3.2, but to run absolutely all unit tests PHP 5.4 and Xdebug are required. If you
+do not have either of them some tests will be skipped.
