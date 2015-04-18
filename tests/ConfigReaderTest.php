@@ -3,7 +3,8 @@
 
 use Ardi\ConfigReader;
 
-class ConfigReaderTest extends PHPUnit_Framework_TestCase {
+class ConfigReaderTest extends PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         ConfigReader::setConfigDir('tests/fixtures/config');

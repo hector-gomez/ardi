@@ -1,9 +1,11 @@
 <?php
 
 
+use Ardi\ConfigReader;
 use Ardi\UrlHelper;
 
-class UrlHelperTest extends PHPUnit_Framework_TestCase {
+class UrlHelperTest extends PHPUnit_Framework_TestCase
+{
     public function setUpClass()
     {
         ConfigReader::setConfigDir('tests/fixtures/config');
