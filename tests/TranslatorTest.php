@@ -41,8 +41,7 @@ class TranslatorTest extends PHPUnit_Framework_TestCase
 
     public function testEmptyString()
     {
-        $this->setExpectedException('Exception', 'Could not find a translation for empty');
         $i18n = new Translator('en', 'test_view', $this->langDir);
-        $i18n->get('empty');
+        $this->assertEmpty($i18n->get('empty'), 'An empty value for a translation must be respected');
     }
 }

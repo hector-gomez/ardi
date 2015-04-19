@@ -38,20 +38,17 @@ class Translator
      * If it can't find it within the view-specific section of the file it will fall back to the "common" section.
      *
      * @param string $key The string to retrieve
-     * @return null|string The value of the translation or null if not found
+     * @return string The value of the translation (can be empty)
      * @throws \Exception If there isn't a translation for the specified key
      */
     public function get($key)
     {
-        $exception = new \Exception("Could not find a translation for $key");
-        try {
-            $result = array_key_exists($key, $this->viewStrings) ? $this->viewStrings[$key] : $this->commonStrings[$key];
-        } catch(\Exception $e) {
-            throw $exception;
+        if (array_key_exists($key, $this->viewStrings)) {
+            return $this->viewStrings[$key];
+        } else if (array_key_exists($key, $this->commonStrings)) {
+            return $this->commonStrings[$key];
+        } else {
+            throw new \Exception("Could not find a translation for $key");
         }
-        if (empty($result)) {
-            throw $exception;
-        }
-        return $result;
     }
 }
