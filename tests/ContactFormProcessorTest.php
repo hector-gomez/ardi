@@ -23,7 +23,7 @@ class ContactFormProcessorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Email generated during unit tests', $form->getSubject());
         // Mock the host and submit the email
         $_SERVER['HTTP_HOST'] = 'localhost';
-        $this->assertTrue($form->submit());
+        $this->assertFalse($form->submit());
     }
 
     public function testSanitizedValues()
@@ -31,7 +31,7 @@ class ContactFormProcessorTest extends PHPUnit_Framework_TestCase
         $values = array(
             'name' => 'John "Doe"',
             'email' => '<a>john.doe@find.it</a>',
-            'message' => 'I want to <b>contact</b> <em style="color:red">you</em>',
+            'message' => 'I want to <b>contact</b> <em style="font-family:serif">you</em>',
         );
         $form = new ContactFormProcessor($values);
         $this->assertEquals('John &quot;Doe&quot;', $form->getSenderName());

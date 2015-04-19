@@ -36,7 +36,18 @@ class ContactFormProcessor
     }
 
     /**
-     * Sends the form contents
+     * Determines if the email will be sent to a local account.
+     *
+     * @return bool Whether the recipient is a local account or not
+     */
+    private function isToLocalhost()
+    {
+        return strpos($this->recipientEmail, '@localhost') !== false;
+    }
+
+    /**
+     * Sends the form contents.
+     * If the recipient address is at localhost it will not attempt to submit and will return false.
      *
      * @return bool Whether the form was successfully submitted
      */
@@ -46,7 +57,7 @@ class ContactFormProcessor
         $headers = "From: Contact Form <$fromEmail>" . "\r\n" .
             "Reply-To: $this->senderEmail" . "\r\n" .
             'X-Mailer: PHP/' . phpversion();
-        return mail($this->recipientEmail, $this->subject, $this->message, $headers);
+        return $this->isToLocalhost() ? false : mail($this->recipientEmail, $this->subject, $this->message, $headers);
     }
 
     /**
