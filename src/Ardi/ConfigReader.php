@@ -47,7 +47,7 @@ class ConfigReader
      * It is also possible to specify which of the child values will be returned spacing them with dots (.)
      *
      * @param string $key Name of the value to return, or a dot-separated path to it
-     * @return string|array
+     * @return string|array|bool False if the key does not exist
      */
     public function get($key)
     {
@@ -55,7 +55,11 @@ class ConfigReader
             $path = explode('.', $key);
             $current = $this->cachedConfig;
             for ($i = 0; $i < count($path); $i++) {
-                $current = $current[$path[$i]];
+                $index = $path[$i];
+                if (!array_key_exists($index, $current)) {
+                    return false;
+                }
+                $current = $current[$index];
             }
             $this->cachedKeys[$key] = $current;
         }
