@@ -26,7 +26,7 @@ Readers are cached and reused for greater performance.
 ### Translation
 
 Inside the _lang_ folder you must create an ini file per supported language, with the locale as filename
-(e.g. _en.ini_,_es.ini_, _fr.ini_, _de.ini_).
+(e.g. _en.ini_, _es.ini_, _fr.ini_, _de.ini_).
 
 A translation file must contain a section per view and a _common_ section, with values any view may access. Example:
 
