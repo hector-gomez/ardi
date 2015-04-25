@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="<?= $this->lang ?>">
+    <head>
+        <meta charset="<?= $this->charset ?>">
+        <meta name="keywords" content="<?= $this->keywords ?>">
+        <meta name="description" content="<?= $this->description ?>">
+        <title><?= $this->title ?></title>
+        <?= $this->getStylesheetsMarkup() ?>
+        <?= $this->getHeadScriptsMarkup() ?>
+    </head>
+    <body>
+        <?= $this->body ?>
+        <?= $this->getBodyScriptsMarkup() ?>
+    </body>
+</html>

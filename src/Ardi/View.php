@@ -202,6 +202,16 @@ class View
     }
 
     /**
+     * Changes the path where layouts are located.
+     *
+     * @param string $layoutsDir Path to the folder, relative to the repository root
+     */
+    public function setLayoutsDir($layoutsDir)
+    {
+        $this->layoutsDir = $layoutsDir;
+    }
+
+    /**
      * Assigns a translator for the view. That defines the language strings that will be used.
      *
      * @param Translator $translator Translator instance to use in this view
@@ -209,5 +219,15 @@ class View
     public function setTranslator(Translator $translator)
     {
         $this->i18n = $translator;
+    }
+
+    /**
+     * Changes the path where views are located.
+     *
+     * @param string $viewsDir Path to the folder, relative to the repository root
+     */
+    public function setViewsDir($viewsDir)
+    {
+        $this->viewsDir = $viewsDir;
     }
 }

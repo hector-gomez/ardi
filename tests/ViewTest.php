@@ -7,8 +7,15 @@ use Ardi\View;
 
 class ViewTest extends PHPUnit_Framework_TestCase
 {
-    private $langDir = 'tests/fixtures/lang';
     private $configDir = 'tests/fixtures/config';
+    private $langDir = 'tests/fixtures/lang';
+    private $layoutsDir = 'tests/fixtures/layouts';
+    private $viewsDir = 'tests/fixtures/views';
+
+    private function getExpectedOutputFor($functionName)
+    {
+        return file_get_contents("tests/resources/ViewTest/$functionName.html");
+    }
 
     public function setUp()
     {
@@ -61,5 +68,49 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $i18n = new Translator('en', $viewName, $this->langDir);
         $view->setTranslator($i18n);
         $this->assertTrue($view->isTranslated());
+    }
+
+    public function testRenderingOutput()
+    {
+        $view = new View('home', 'simple');
+        $view->setViewsDir($this->viewsDir);
+        $view->setLayoutsDir($this->layoutsDir);
+        $expectedOutput = $this->getExpectedOutputFor('testRenderingOutput');
+        $this->expectOutputString($expectedOutput);
+        $this->assertEquals($expectedOutput, $view->render());
+    }
+
+    public function testRenderingWithVariableInjection()
+    {
+        // Values to inject in the view
+        $description = 'This is the site home page';
+        $keywords = 'list,of,keywords';
+        $lang = 'en';
+        $title = 'Homepage';
+
+        // Construct the view object
+        $view = new View('home');
+        $view->setViewsDir($this->viewsDir);
+        $view->setLayoutsDir($this->layoutsDir);
+        $view->description = $description;
+        $view->keywords = $keywords;
+        $view->lang = $lang;
+        $view->title = $title;
+
+        // Parse the result of rendering the view as DOM
+        $document = new DOMDocument();
+        $document->loadHTML($view->render(false));
+
+        $titleNode = $document->getElementsByTagName('title')->item(0);
+        $this->assertEquals($title, $titleNode->nodeValue);
+
+        $htmlNode =  $document->getElementsByTagName('html')->item(0);
+        $this->assertEquals($lang, $htmlNode->attributes->getNamedItem('lang')->nodeValue);
+
+        // For this test the order of the meta tags in default.phtml must be kept
+        $metaNodes = $document->getElementsByTagName('meta');
+        $this->assertEquals('utf-8', $metaNodes->item(0)->attributes->getNamedItem('charset')->nodeValue);
+        $this->assertEquals($keywords, $metaNodes->item(1)->attributes->getNamedItem('content')->nodeValue);
+        $this->assertEquals($description, $metaNodes->item(2)->attributes->getNamedItem('content')->nodeValue);
     }
 }
