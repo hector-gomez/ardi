@@ -19,16 +19,16 @@ class ResponseHelperTest extends PHPUnit_Framework_TestCase
     {
         $this->requireXdebug();
         $defaultMessage = 'Bad Request';
-        $this->expectOutputString($defaultMessage);
         ResponseHelper::issueBadRequestError();
         $this->assertContains($defaultMessage, xdebug_get_headers());
     }
 
     public function testCustomMessageForBadRequestError()
     {
+        $this->requireXdebug();
         $message = 'There is something wrong in your request';
-        $this->expectOutputString($message);
         ResponseHelper::issueBadRequestError($message);
+        $this->assertContains($message, xdebug_get_headers());
     }
 
     public function testCodeForNotFoundError()
@@ -42,16 +42,16 @@ class ResponseHelperTest extends PHPUnit_Framework_TestCase
     {
         $this->requireXdebug();
         $defaultMessage = 'Not found';
-        $this->expectOutputString($defaultMessage);
         ResponseHelper::issueNotFoundError();
         $this->assertContains($defaultMessage, xdebug_get_headers());
     }
 
     public function testCustomMessageForNotFoundError()
     {
+        $this->requireXdebug();
         $message = 'Could not locate the requested item';
-        $this->expectOutputString($message);
         ResponseHelper::issueNotFoundError($message);
+        $this->assertContains($message, xdebug_get_headers());
     }
 
     public function testRedirectionHeaders()

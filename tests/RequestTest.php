@@ -64,6 +64,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_REQUEST['lang'] = '';
         $appConfig = ConfigReader::getReader('app');
         $defaultLanguage = $appConfig->get('languages.default');
+        $this->setExpectedException('Ardi\Exception\Http\RedirectionException', "Redirecting to $defaultLanguage");
         $request = $this->buildRequestObject();
         $request->dispatch();
         $this->assertContains("Location: $defaultLanguage", xdebug_get_headers());
@@ -76,7 +77,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('PHP 5.4 required to test response code');
         }
         $_REQUEST['lang'] = 'de';
-        $this->expectOutputString('Selected language not supported');
+        $this->setExpectedException('Ardi\Exception\Http\BadRequestException', 'Selected language not supported');
         $request = $this->buildRequestObject();
         $request->dispatch();
         $this->assertEquals(400, http_response_code());
@@ -89,7 +90,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
         }
         $_REQUEST['view'] = $viewName = 'non-existent';
         $_REQUEST['lang'] = $lang = 'en';
-        $this->expectOutputString("Requested view ($viewName) does not exist for this language ($lang)");
+        $expectedMessage = "Requested view ($viewName) does not exist for this language ($lang)";
+        $this->setExpectedException('Ardi\Exception\Http\NotFoundException', $expectedMessage);
         $request = $this->buildRequestObject();
         $request->dispatch();
         $this->assertEquals(404, http_response_code());

@@ -2,11 +2,14 @@
 
 namespace Ardi;
 
+use Ardi\Exception\Http\BadRequestException;
+use Ardi\Exception\Http\NotFoundException;
+use Ardi\Exception\Http\RedirectionException;
+
 
 /**
  * Represents the current request and can route it to the right controller.
  *
- * @TODO Turn all error messages into exceptions, where the headers are issued and execution ends
  * @package Ardi
  */
 class Request
@@ -62,6 +65,7 @@ class Request
      * @param string $viewName Name of the view to load (may change from one language to another)
      * @param string $lang Language to use
      * @return View The populated view object
+     * @throws NotFoundException If there isn't a matching route
      */
     private function bootstrapView($viewName, $lang)
     {
@@ -71,8 +75,7 @@ class Request
         $routeConfig = ConfigReader::getReader('routes');
         $route = $routeConfig->get($lang . '.' . $viewName);
         if (empty($route)) {
-            ResponseHelper::issueNotFoundError("Requested view ($viewName) does not exist for this language ($lang)");
-            return false;
+            throw new NotFoundException("Requested view ($viewName) does not exist for this language ($lang)");
         }
         $i18n = new Translator($lang, $route, $this->langDir);
         //TODO Read what layout to use from a configuration file ("default" if not set)
@@ -98,23 +101,17 @@ class Request
      * Process the request and produce a response.
      *
      * @param bool $print (optional) Whether to print the response, set to false if you only want to capture it
-     * @return string|bool The response that will be outputted (HTTP code 200) or false if the request did not succeed
+     * @return string The response that will be outputted in case of a successful request (HTTP code 200)
      */
     public function dispatch($print = true)
     {
         if ($this->isFormSubmission()) {
             $this->dispatchContactForm();
-            return false;
+            return true;
         }
-
         $lang = $this->processLanguage();
-        if ($lang === false) {
-            return false;
-        }
-
         $view = $this->bootstrapView($this->getRouteParam('view'), $lang);
-        return $view ? $view->render($print) : false;
-
+        return $view->render($print);
     }
 
     /**
@@ -169,7 +166,9 @@ class Request
     /**
      * Reads the selected language from the request and makes sure it's supported
      *
-     * @return string|bool The selected language or false if the request should not proceed
+     * @return string The selected language
+     * @throws BadRequestException If the selected language is not supported
+     * @throws RedirectionException If the user will be redirected to use the default language
      */
     private function processLanguage()
     {
@@ -178,14 +177,12 @@ class Request
 
         // Redirect to the default language if not set
         if (empty($lang)) {
-            ResponseHelper::redirectTo($appConfig->get('languages.default'), 303);
-            return false;
+            throw new RedirectionException($appConfig->get('languages.default'), 303);
         }
 
         // Make sure the selected language is supported
         if (!in_array($lang, $appConfig->get('languages.supported'))) {
-            ResponseHelper::issueBadRequestError('Selected language not supported');
-            return false;
+            throw new BadRequestException('Selected language not supported');
         }
 
         return $lang;
