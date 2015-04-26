@@ -23,8 +23,7 @@ class Request
 
     private $queryParams = array();
 
-    //TODO Leave langDir empty and call other methods without it if not set, to respect other classes' defaults
-    private $langDir = 'lang';
+    private $langDir;
     private $layoutsDir;
     private $viewsDir;
 
@@ -77,7 +76,7 @@ class Request
         if (empty($route)) {
             throw new NotFoundException("Requested view ($viewName) does not exist for this language ($lang)");
         }
-        $i18n = new Translator($lang, $route, $this->langDir);
+        $i18n = isset($this->langDir) ? new Translator($lang, $route, $this->langDir) : new Translator($lang, $route);
         //TODO Read what layout to use from a configuration file ("default" if not set)
         $view = new View($route);
         $view->setTranslator($i18n);
