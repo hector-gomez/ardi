@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="<?= $this->lang ?>">
+<html lang="<?php echo $this->lang; ?>">
     <head>
-        <meta charset="<?= $this->charset ?>">
-        <meta name="keywords" content="<?= $this->keywords ?>">
-        <meta name="description" content="<?= $this->description ?>">
-        <title><?= $this->title ?></title>
-        <?= $this->getStylesheetsMarkup() ?>
-        <?= $this->getHeadScriptsMarkup() ?>
+        <meta charset="<?php echo $this->charset; ?>">
+        <meta name="keywords" content="<?php echo $this->keywords; ?>">
+        <meta name="description" content="<?php echo $this->description; ?>">
+        <title><?php echo $this->title; ?></title>
+        <?php echo $this->getStylesheetsMarkup(); ?>
+        <?php echo $this->getHeadScriptsMarkup(); ?>
     </head>
     <body>
-        <?= $this->body ?>
-        <?= $this->getBodyScriptsMarkup() ?>
+        <?php echo $this->body ?>
+        <?php echo $this->getBodyScriptsMarkup(); ?>
     </body>
 </html>
