@@ -56,11 +56,12 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('en', $r->getRouteParam('lang'));
     }
 
+    /**
+     * @requires PHP 5.4
+     * @requires extension xdebug
+     */
     public function testRedirectToDefaultLanguage()
     {
-        if (!function_exists('xdebug_get_headers') || !function_exists('http_response_code')) {
-            $this->markTestSkipped('PHP 5.4 with Xdebug is required to test response code and headers');
-        }
         $_REQUEST['lang'] = '';
         $appConfig = ConfigReader::getReader('app');
         $defaultLanguage = $appConfig->get('languages.default');
@@ -70,22 +71,22 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(303, http_response_code());
     }
 
+    /**
+     * @requires PHP 5.4
+     */
     public function testUnsupportedLanguage()
     {
-        if (!function_exists('http_response_code')) {
-            $this->markTestSkipped('PHP 5.4 required to test response code');
-        }
         $_REQUEST['lang'] = 'de';
         $this->setExpectedException('Ardi\Exception\Http\BadRequestException', 'Selected language not supported');
         $this->buildRequestObject()->dispatch();
         $this->assertEquals(400, http_response_code());
     }
 
+    /**
+     * @requires PHP 5.4
+     */
     public function testNonExistentView()
     {
-        if (!function_exists('http_response_code')) {
-            $this->markTestSkipped('PHP 5.4 required to test response code');
-        }
         $_REQUEST['view'] = $viewName = 'non-existent';
         $_REQUEST['lang'] = $lang = 'en';
         $expectedMessage = "Requested view ($viewName) does not exist for this language ($lang)";
@@ -94,11 +95,12 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(404, http_response_code());
     }
 
+    /**
+     * @requires PHP 5.4
+     * @requires extension xdebug
+     */
     public function testDispatchContactForm()
     {
-        if (!function_exists('xdebug_get_headers') || !function_exists('http_response_code')) {
-            $this->markTestSkipped('PHP 5.4 with Xdebug is required to test response code and headers');
-        }
         $_SERVER['CONTENT_TYPE'] = 'multipart/form-data';
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['REQUEST_URI'] = '/en/contact';
