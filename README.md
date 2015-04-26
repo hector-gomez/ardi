@@ -1,5 +1,8 @@
 ardi
 ====
+
+[![Build Status](https://travis-ci.org/hector-gomez/ardi.svg?branch=master)](https://travis-ci.org/hector-gomez/ardi)
+
 Ardi - a PHP framework for web designers
 
 ## User manual
